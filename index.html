@@ -40,6 +40,9 @@
 
         function updateBackground() {
             const val = select.value;
+            // 괄호 안의 글자만 추출해서 매칭
+            let subject = val.split('(')[1].replace(')', ''); 
+            
             const images = {
                 "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
                 "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
@@ -53,11 +56,8 @@
                 "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
             };
 
-            for (let subject in images) {
-                if (val.includes(subject)) {
-                    document.body.style.backgroundImage = "url('" + images[subject] + "')";
-                    return;
-                }
+            if (images[subject]) {
+                document.body.style.backgroundImage = "url('" + images[subject] + "')";
             }
         }
 
@@ -72,8 +72,8 @@
             
             if(!teacher || !studentNum || !studentName) { alert("모두 입력해주세요!"); return; }
             
-            // 소리 재생 (강제 재생 시도)
-            const audio = new Audio('https://www.soundjay.com/buttons/sounds/button-10.mp3');
+            // 소리 파일 다시 설정
+            const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
             audio.play();
             
             db.ref('calls/').push({ 
