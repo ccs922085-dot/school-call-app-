@@ -37,20 +37,31 @@
             select.appendChild(opt);
         });
 
+        // 배경 이미지 사전 정의
+        const bgImages = {
+            "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
+            "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
+            "윤리": "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
+            "체육": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+            "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
+            "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
+            "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
+            "물리학": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
+            "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+            "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
+        };
+
         function updateBackground() {
             const val = select.value;
-            let img = "https://images.unsplash.com/photo-1523240795612-9a054b0db644";
-            if(val.includes("국어")) img = "https://images.unsplash.com/photo-1474932435176-59336187747e";
-            else if(val.includes("사회")) img = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac";
-            else if(val.includes("윤리")) img = "https://images.unsplash.com/photo-1507842217343-583bb7270b66";
-            else if(val.includes("체육")) img = "https://images.unsplash.com/photo-1461896836934-ffe607ba8211";
-            else if(val.includes("미술")) img = "https://images.unsplash.com/photo-1513364776144-60967b0f880f";
-            else if(val.includes("화학")) img = "https://images.unsplash.com/photo-1532094349884-543bc11b234d";
-            else if(val.includes("영어")) img = "https://images.unsplash.com/photo-1503676260728-1c09da09490b";
-            else if(val.includes("물리학")) img = "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2";
-            else if(val.includes("지구과학")) img = "https://images.unsplash.com/photo-1451187580459-43490279c0fa";
-            else if(val.includes("수학")) img = "https://images.unsplash.com/photo-1509228468518-180dd28649d4";
-            document.body.style.backgroundImage = "url('" + img + "')";
+            let found = false;
+            for (let subject in bgImages) {
+                if (val.includes(subject)) {
+                    document.body.style.backgroundImage = "url('" + bgImages[subject] + "')";
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1523240795612-9a054b0db644')";
         }
 
         const firebaseConfig = { databaseURL: "https://school-call-app-10ee5-default-rtdb.firebaseio.com/" };
@@ -64,16 +75,16 @@
             
             if(!teacher || !studentNum || !studentName) { alert("모든 항목을 입력해주세요!"); return; }
             
-            // 효과음 재생
+            // 소리 재생 (사용자가 호출 버튼을 누르는 동작이 '상호작용'으로 인식되어 재생됩니다)
             const audio = new Audio('https://actions.google.com/sounds/v1/notifications/bell_original.ogg');
-            audio.play();
+            audio.play().catch(e => console.log("소리 재생 실패:", e));
             
             db.ref('calls/').push({ 
                 teacher, 
                 student: studentNum + " " + studentName, 
                 timestamp: Date.now() 
             });
-            alert(teacher + ' 선생님께 호출을 보냈습니다!');
+            alert(teacher + ' 선생님께 호출 완료!');
         }
     </script>
 </body>
