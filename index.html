@@ -2,37 +2,50 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>교무실 호출 시스템</title>
+    <title>3학년 교무실 호출 시스템</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
-        input { padding: 10px; width: 200px; }
-        button { padding: 10px 20px; cursor: pointer; background: #64ffda; border: none; }
+        body { font-family: sans-serif; text-align: center; padding-top: 30px; }
+        select, input, button { padding: 12px; margin: 8px; width: 280px; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #64ffda; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>교무실 호출하기</h1>
-    <input type="text" id="name" placeholder="학생 이름을 입력하세요">
-    <br><br>
+    <h1>3학년 교무실 호출</h1>
+    
+    <select id="teacherSelect">
+        <option value="">선생님을 선택하세요</option>
+    </select>
+    <br>
+    <input type="text" id="name" placeholder="본인 학생 이름을 입력하세요">
+    <br>
     <button onclick="sendCall()">호출하기</button>
 
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://school-call-app-10ee5-default-rtdb.firebaseio.com/"
-        };
+        const teacherList = [
+            "김건우(국어)", "김영민(사회)", "노여진(국어)", "박기만(윤리)", 
+            "이의진(체육)", "이필권(미술)", "이주영(화학)", "홍지연(영어)", 
+            "강만규(물리학)", "최아현(지구과학)", "채정태(수학)"
+        ];
+
+        const select = document.getElementById('teacherSelect');
+        teacherList.forEach(name => {
+            let opt = document.createElement('option');
+            opt.value = name; opt.innerHTML = name + " 선생님";
+            select.appendChild(opt);
+        });
+
+        const firebaseConfig = { databaseURL: "https://school-call-app-10ee5-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         function sendCall() {
-            const name = document.getElementById('name').value;
-            if(name === "") { alert("이름을 입력해주세요!"); return; }
-            
-            db.ref('calls/').push({
-                studentName: name,
-                timestamp: Date.now()
-            });
-            alert(name + ' 학생, 호출 완료!');
+            const teacher = document.getElementById('teacherSelect').value;
+            const student = document.getElementById('name').value;
+            if(!teacher || !student) { alert("선생님 선택과 학생 이름을 모두 입력해주세요!"); return; }
+            db.ref('calls/').push({ teacher, student, timestamp: Date.now() });
+            alert(teacher + ' 선생님께 호출을 보냈습니다!');
         }
     </script>
 </body>
