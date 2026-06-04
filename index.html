@@ -2,14 +2,13 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>3학년 교무실 호출 시스템</title>
+    <title>3학년 교무실 호출</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
         body { 
             font-family: sans-serif; text-align: center; padding-top: 50px; 
             background-size: cover; background-position: center; height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644');
             transition: background 0.5s ease;
         }
         #container { background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 20px; display: inline-block; width: 300px; }
@@ -17,12 +16,23 @@
         button { background: #64ffda; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
-<body>
+<body style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644');">
 
     <div id="container">
         <h1>3학년 교무실 호출</h1>
-        <select id="teacherSelect" onchange="updateBackground()">
+        <select id="teacherSelect" onchange="changeBackground(this.value)">
             <option value="">선생님을 선택하세요</option>
+            <option value="국어">김건우(국어)</option>
+            <option value="사회">김영민(사회)</option>
+            <option value="국어">노여진(국어)</option>
+            <option value="윤리">박기만(윤리)</option>
+            <option value="체육">이의진(체육)</option>
+            <option value="미술">이필권(미술)</option>
+            <option value="화학">이주영(화학)</option>
+            <option value="영어">홍지연(영어)</option>
+            <option value="물리">강만규(물리학)</option>
+            <option value="지구과학">최아현(지구과학)</option>
+            <option value="수학">채정태(수학)</option>
         </select>
         <input type="text" id="studentNum" placeholder="학번 (예: 30101)">
         <input type="text" id="name" placeholder="이름을 입력하세요">
@@ -30,34 +40,22 @@
     </div>
 
     <script>
-        const teacherList = ["김건우(국어)", "김영민(사회)", "노여진(국어)", "박기만(윤리)", "이의진(체육)", "이필권(미술)", "이주영(화학)", "홍지연(영어)", "강만규(물리학)", "최아현(지구과학)", "채정태(수학)"];
-        const select = document.getElementById('teacherSelect');
-        teacherList.forEach(name => {
-            let opt = document.createElement('option');
-            opt.value = name; opt.innerHTML = name + " 선생님";
-            select.appendChild(opt);
-        });
+        const bgImages = {
+            "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
+            "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
+            "윤리": "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
+            "체육": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+            "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
+            "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
+            "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
+            "물리": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
+            "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+            "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
+        };
 
-        function updateBackground() {
-            const val = select.value;
-            // 괄호 안의 글자만 추출해서 매칭
-            let subject = val.split('(')[1].replace(')', ''); 
-            
-            const images = {
-                "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
-                "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
-                "윤리": "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
-                "체육": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
-                "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
-                "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
-                "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
-                "물리학": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
-                "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
-                "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
-            };
-
-            if (images[subject]) {
-                document.body.style.backgroundImage = "url('" + images[subject] + "')";
+        function changeBackground(subject) {
+            if(bgImages[subject]) {
+                document.body.style.backgroundImage = "url('" + bgImages[subject] + "')";
             }
         }
 
@@ -66,21 +64,17 @@
         const db = firebase.database();
 
         function sendCall() {
-            const teacher = select.value;
+            const select = document.getElementById('teacherSelect');
+            const teacher = select.options[select.selectedIndex].text;
             const studentNum = document.getElementById('studentNum').value;
             const studentName = document.getElementById('name').value;
             
-            if(!teacher || !studentNum || !studentName) { alert("모두 입력해주세요!"); return; }
+            if(!select.value || !studentNum || !studentName) { alert("모두 입력해주세요!"); return; }
             
-            // 소리 파일 다시 설정
             const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
             audio.play();
             
-            db.ref('calls/').push({ 
-                teacher, 
-                student: studentNum + " " + studentName, 
-                timestamp: Date.now() 
-            });
+            db.ref('calls/').push({ teacher, student: studentNum + " " + studentName, timestamp: Date.now() });
             alert(teacher + ' 선생님께 호출 완료!');
         }
     </script>
