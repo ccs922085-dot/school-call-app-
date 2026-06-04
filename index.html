@@ -2,11 +2,12 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>3학년 교무실 호출 시스템</title>
+    <title>3학년 교무실 호출</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 30px; }
+        body { font-family: sans-serif; text-align: center; padding-top: 30px; background-color: #f0f4f8; }
+        #icon { font-size: 60px; margin: 20px; display: block; }
         select, input, button { padding: 12px; margin: 8px; width: 280px; border-radius: 5px; border: 1px solid #ccc; }
         button { background: #64ffda; border: none; cursor: pointer; font-weight: bold; }
     </style>
@@ -14,7 +15,9 @@
 <body>
     <h1>3학년 교무실 호출</h1>
     
-    <select id="teacherSelect">
+    <span id="icon">🏫</span>
+
+    <select id="teacherSelect" onchange="updateIcon()">
         <option value="">선생님을 선택하세요</option>
     </select>
     <br>
@@ -36,16 +39,33 @@
             select.appendChild(opt);
         });
 
+        // 선생님 선택 시 아이콘 변경
+        function updateIcon() {
+            const val = select.value;
+            const icon = document.getElementById('icon');
+            if(val.includes("국어")) icon.innerHTML = "📖";
+            else if(val.includes("사회")) icon.innerHTML = "🌍";
+            else if(val.includes("윤리")) icon.innerHTML = "⚖️";
+            else if(val.includes("체육")) icon.innerHTML = "⚽";
+            else if(val.includes("미술")) icon.innerHTML = "🎨";
+            else if(val.includes("화학")) icon.innerHTML = "🧪";
+            else if(val.includes("영어")) icon.innerHTML = "🔤";
+            else if(val.includes("물리학")) icon.innerHTML = "⚙️";
+            else if(val.includes("지구과학")) icon.innerHTML = "🪐";
+            else if(val.includes("수학")) icon.innerHTML = "📐";
+            else icon.innerHTML = "🏫";
+        }
+
         const firebaseConfig = { databaseURL: "https://school-call-app-10ee5-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         function sendCall() {
-            const teacher = document.getElementById('teacherSelect').value;
+            const teacher = select.value;
             const student = document.getElementById('name').value;
-            if(!teacher || !student) { alert("선생님 선택과 학생 이름을 모두 입력해주세요!"); return; }
+            if(!teacher || !student) { alert("선택과 이름을 입력해주세요!"); return; }
             db.ref('calls/').push({ teacher, student, timestamp: Date.now() });
-            alert(teacher + ' 선생님께 호출을 보냈습니다!');
+            alert(teacher + ' 선생님께 호출 완료!');
         }
     </script>
 </body>
