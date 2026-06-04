@@ -30,7 +30,7 @@
             <option value="미술">이필권(미술)</option>
             <option value="화학">이주영(화학)</option>
             <option value="영어">홍지연(영어)</option>
-            <option value="물리">강만규(물리학)</option>
+            <option value="물리학">강만규(물리학)</option>
             <option value="지구과학">최아현(지구과학)</option>
             <option value="수학">채정태(수학)</option>
         </select>
@@ -40,6 +40,7 @@
     </div>
 
     <script>
+        // 모든 과목을 빠짐없이 등록했습니다.
         const bgImages = {
             "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
             "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
@@ -48,7 +49,7 @@
             "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
             "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
             "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
-            "물리": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
+            "물리학": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
             "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
             "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
         };
@@ -66,15 +67,16 @@
         function sendCall() {
             const select = document.getElementById('teacherSelect');
             const teacher = select.options[select.selectedIndex].text;
-            const studentNum = document.getElementById('studentNum').value;
-            const studentName = document.getElementById('name').value;
+            const sNum = document.getElementById('studentNum').value;
+            const sName = document.getElementById('name').value;
             
-            if(!select.value || !studentNum || !studentName) { alert("모두 입력해주세요!"); return; }
+            if(!select.value || !sNum || !sName) { alert("모두 입력하세요!"); return; }
             
+            // 소리 재생 (페이지 클릭 후 버튼 누르면 소리가 납니다)
             const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-            audio.play();
+            audio.play().catch(() => {});
             
-            db.ref('calls/').push({ teacher, student: studentNum + " " + studentName, timestamp: Date.now() });
+            db.ref('calls/').push({ teacher, student: sNum + " " + sName, timestamp: Date.now() });
             alert(teacher + ' 선생님께 호출 완료!');
         }
     </script>
