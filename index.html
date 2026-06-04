@@ -16,21 +16,20 @@
         button { background: #64ffda; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
-<body style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644');">
+<body id="mainBody">
 
     <div id="container">
         <h1>3학년 교무실 호출</h1>
-        <select id="teacherSelect" onchange="changeBackground(this.value)">
+        <select id="teacherSelect" onchange="changeBg(this.value)">
             <option value="">선생님을 선택하세요</option>
-            <option value="국어">김건우(국어)</option>
+            <option value="국어">김건우(국어), 노여진(국어)</option>
             <option value="사회">김영민(사회)</option>
-            <option value="국어">노여진(국어)</option>
             <option value="윤리">박기만(윤리)</option>
             <option value="체육">이의진(체육)</option>
             <option value="미술">이필권(미술)</option>
             <option value="화학">이주영(화학)</option>
             <option value="영어">홍지연(영어)</option>
-            <option value="물리학">강만규(물리학)</option>
+            <option value="물리">강만규(물리학)</option>
             <option value="지구과학">최아현(지구과학)</option>
             <option value="수학">채정태(수학)</option>
         </select>
@@ -40,23 +39,21 @@
     </div>
 
     <script>
-        // 모든 과목을 빠짐없이 등록했습니다.
-        const bgImages = {
-            "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
-            "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
-            "윤리": "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
-            "체육": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
-            "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
-            "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
-            "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
-            "물리학": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
-            "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
-            "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
-        };
-
-        function changeBackground(subject) {
-            if(bgImages[subject]) {
-                document.body.style.backgroundImage = "url('" + bgImages[subject] + "')";
+        function changeBg(val) {
+            const bgMap = {
+                "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
+                "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
+                "윤리": "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
+                "체육": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+                "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
+                "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
+                "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
+                "물리": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
+                "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+                "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
+            };
+            if(bgMap[val]) {
+                document.body.style.backgroundImage = "url('" + bgMap[val] + "')";
             }
         }
 
@@ -65,14 +62,14 @@
         const db = firebase.database();
 
         function sendCall() {
-            const select = document.getElementById('teacherSelect');
-            const teacher = select.options[select.selectedIndex].text;
+            const sel = document.getElementById('teacherSelect');
+            const teacher = sel.options[sel.selectedIndex].text;
             const sNum = document.getElementById('studentNum').value;
             const sName = document.getElementById('name').value;
             
-            if(!select.value || !sNum || !sName) { alert("모두 입력하세요!"); return; }
+            if(!sel.value || !sNum || !sName) { alert("모두 입력해주세요!"); return; }
             
-            // 소리 재생 (페이지 클릭 후 버튼 누르면 소리가 납니다)
+            // 소리 재생 (버튼 클릭시)
             const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
             audio.play().catch(() => {});
             
