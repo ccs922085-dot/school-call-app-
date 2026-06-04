@@ -9,21 +9,22 @@
         body { 
             font-family: sans-serif; text-align: center; padding-top: 50px; 
             background-size: cover; background-position: center; height: 100vh;
-            transition: background 0.8s ease;
+            background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644');
+            transition: background 0.5s ease;
         }
         #container { background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 20px; display: inline-block; width: 300px; }
         input, select, button { padding: 12px; margin: 8px; width: 280px; border-radius: 5px; border: 1px solid #ccc; }
         button { background: #64ffda; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
-<body style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644');">
+<body>
 
     <div id="container">
         <h1>3학년 교무실 호출</h1>
         <select id="teacherSelect" onchange="updateBackground()">
             <option value="">선생님을 선택하세요</option>
         </select>
-        <input type="text" id="studentNum" placeholder="학번을 입력하세요 (예: 30101)">
+        <input type="text" id="studentNum" placeholder="학번 (예: 30101)">
         <input type="text" id="name" placeholder="이름을 입력하세요">
         <button onclick="sendCall()">호출하기</button>
     </div>
@@ -37,31 +38,27 @@
             select.appendChild(opt);
         });
 
-        // 배경 이미지 사전 정의
-        const bgImages = {
-            "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
-            "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
-            "윤리": "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
-            "체육": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
-            "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
-            "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
-            "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
-            "물리학": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
-            "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
-            "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
-        };
-
         function updateBackground() {
             const val = select.value;
-            let found = false;
-            for (let subject in bgImages) {
+            const images = {
+                "국어": "https://images.unsplash.com/photo-1474932435176-59336187747e",
+                "사회": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac",
+                "윤리": "https://images.unsplash.com/photo-1507842217343-583bb7270b66",
+                "체육": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
+                "미술": "https://images.unsplash.com/photo-1513364776144-60967b0f880f",
+                "화학": "https://images.unsplash.com/photo-1532094349884-543bc11b234d",
+                "영어": "https://images.unsplash.com/photo-1503676260728-1c09da09490b",
+                "물리학": "https://images.unsplash.com/photo-1636466497217-26a8c8df0aa2",
+                "지구과학": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+                "수학": "https://images.unsplash.com/photo-1509228468518-180dd28649d4"
+            };
+
+            for (let subject in images) {
                 if (val.includes(subject)) {
-                    document.body.style.backgroundImage = "url('" + bgImages[subject] + "')";
-                    found = true;
-                    break;
+                    document.body.style.backgroundImage = "url('" + images[subject] + "')";
+                    return;
                 }
             }
-            if (!found) document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1523240795612-9a054b0db644')";
         }
 
         const firebaseConfig = { databaseURL: "https://school-call-app-10ee5-default-rtdb.firebaseio.com/" };
@@ -73,11 +70,11 @@
             const studentNum = document.getElementById('studentNum').value;
             const studentName = document.getElementById('name').value;
             
-            if(!teacher || !studentNum || !studentName) { alert("모든 항목을 입력해주세요!"); return; }
+            if(!teacher || !studentNum || !studentName) { alert("모두 입력해주세요!"); return; }
             
-            // 소리 재생 (사용자가 호출 버튼을 누르는 동작이 '상호작용'으로 인식되어 재생됩니다)
-            const audio = new Audio('https://actions.google.com/sounds/v1/notifications/bell_original.ogg');
-            audio.play().catch(e => console.log("소리 재생 실패:", e));
+            // 소리 재생 (강제 재생 시도)
+            const audio = new Audio('https://www.soundjay.com/buttons/sounds/button-10.mp3');
+            audio.play();
             
             db.ref('calls/').push({ 
                 teacher, 
