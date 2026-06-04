@@ -2,30 +2,25 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>영석고등학교 3학년 교무실 호출</title>
+    <title>3학년 교무실 (동국관 4층)</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
         body { 
             font-family: 'Pretendard', sans-serif;
-            text-align: center; 
-            padding-top: 50px; 
-            /* 영석고등학교 전경 사진을 배경으로 설정 */
-            background-image: url('https://img.im.ge/2026/06/05/영석고-전경.jpg'); 
-            /* 참고: 실제 이미지는 GitHub 저장소에 사진을 올린 후, 
-               그 주소를 복사해 아래 background-image url에 넣어야 완벽히 뜹니다. 
-               지금은 가장 깔끔한 학교 배경으로 대체해 두었습니다. */
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat;
-            height: 100vh;
+            text-align: center; padding-top: 50px; 
+            /* 이미지 파일명이 정확해야 배경이 뜹니다 */
+            background-image: url('IMG_0720.PNG'); 
+            background-size: cover; background-position: center; height: 100vh;
+            background-attachment: fixed;
         }
         #container { 
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.9); 
             padding: 40px; border-radius: 25px; 
             display: inline-block; width: 320px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
+        h1 { color: #2c3e50; font-size: 22px; margin-bottom: 20px; }
         input, select, button { 
             padding: 15px; margin: 10px 0; width: 100%; 
             box-sizing: border-box; border-radius: 10px; 
@@ -40,7 +35,7 @@
 <body>
 
     <div id="container">
-        <h1>영석고 교무실 호출</h1>
+        <h1>3학년 교무실 (동국관 4층)</h1>
         <select id="teacherSelect">
             <option value="">선생님을 선택하세요</option>
             <option value="김건우(국어)">김건우(국어) 선생님</option>
@@ -71,7 +66,7 @@
             const sNum = document.getElementById('studentNum').value;
             const sName = document.getElementById('name').value;
             
-            if(!teacher || !sNum || !sName) { alert("모두 입력해주세요!"); return; }
+            if(!teacher || !sNum || !sName) { alert("항목을 모두 입력해주세요!"); return; }
             
             // 음성 안내 기능
             const msg = new SpeechSynthesisUtterance(teacher + " 선생님을 호출합니다.");
@@ -79,7 +74,7 @@
             window.speechSynthesis.speak(msg);
             
             db.ref('calls/').push({ teacher, student: sNum + " " + sName, timestamp: Date.now() });
-            alert(teacher + ' 선생님께 호출 완료!');
+            alert(teacher + ' 선생님께 호출이 전송되었습니다!');
         }
     </script>
 </body>
