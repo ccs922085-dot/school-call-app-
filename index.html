@@ -9,7 +9,7 @@
         body { 
             font-family: 'Pretendard', sans-serif;
             text-align: center; padding-top: 50px; 
-            /* 이미지 파일명을 정확히 입력했습니다 */
+            /* 이미지 파일명이 정확해야 배경이 뜹니다 */
             background-image: url('IMG_0720.PNG'); 
             background-size: cover; background-position: center; height: 100vh;
             background-attachment: fixed;
@@ -68,12 +68,9 @@
             
             if(!teacher || !sNum || !sName) { alert("항목을 모두 입력해주세요!"); return; }
             
-            // 방송 컨셉 멘트
-            const announcement = "교무실에서 안내 말씀 드립니다. " + sNum + " " + sName + " 학생이, " + teacher + " 선생님을 호출합니다.";
-            
-            const msg = new SpeechSynthesisUtterance(announcement);
+            // 음성 안내 기능
+            const msg = new SpeechSynthesisUtterance(teacher + " 선생님을 호출합니다.");
             msg.lang = 'ko-KR';
-            msg.rate = 0.9; // 방송 느낌의 차분한 속도
             window.speechSynthesis.speak(msg);
             
             db.ref('calls/').push({ teacher, student: sNum + " " + sName, timestamp: Date.now() });
