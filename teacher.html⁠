@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>교무실 호출 확인</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+</head>
+<body>
+    <h1>호출 목록 (실시간)</h1>
+    <ul id="call-list"></ul>
+
+    <script>
+        const firebaseConfig = {
+            // 아까 index.html에 썼던 설정값을 그대로 넣으세요
+            databaseURL: "https://school-call-app-10ee5-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const callList = document.getElementById('call-list');
+
+        // 데이터베이스에서 호출 내용을 실시간으로 가져옵니다
+        database.ref('calls').on('child_added', (snapshot) => {
+            const data = snapshot.val();
+            const li = document.createElement('li');
+            // 학생 이름과 선생님 이름이 같이 뜨도록 수정했어요!
+            li.innerHTML = `<strong>${data.teacher} 선생님</strong>을 <b>${data.student} 학생</b>이 호출했습니다.`;
+            callList.prepend(li); // 최근 호출이 맨 위로 오게 합니다
+        });
+    </script>
+</body>
+</html>
